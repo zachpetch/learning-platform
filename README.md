@@ -16,7 +16,7 @@ A demonstration of Ruby on Rails via a simple Learning Platform web app.
 
 
 ## Database Overview
-- **Student**
+- **User**
   - id (Primary Key, Int)
   - first_name (String)
   - last_name (String)
@@ -27,10 +27,12 @@ A demonstration of Ruby on Rails via a simple Learning Platform web app.
   - name (String)
   - created_at (DateTime)
   - updated_at (DateTime)
-- **TermTemplate**
+- **Term**
   - id (Primary Key, Int)
   - school_id (Foreign Key, Int)
   - name (String)
+  - year (Int)
+  - sequence_num (Int)
   - start_date (Date)
   - end_date (Date)
   - created_at (DateTime)
@@ -41,14 +43,12 @@ A demonstration of Ruby on Rails via a simple Learning Platform web app.
   - subject (String)
   - number (Int)
   - name (String, Nullable)
-  - cost (Int)
   - created_at (DateTime)
   - updated_at (DateTime)
 - **CourseOffering**
   - id (Primary Key, Int)
   - course_id (Foreign Key, Int)
   - term_id (Foreign Key, Int)
-  - seats (Int)
   - created_at (DateTime)
   - updated_at (DateTime)
 - **License**
@@ -59,12 +59,16 @@ A demonstration of Ruby on Rails via a simple Learning Platform web app.
   - updated_at (DateTime)
 - **Subscription**
   - id (Primary Key, Int)
-  - student_id (Foreign Key, Int)
+  - user_id (Foreign Key, Int)
   - term_id (Foreign Key, Int)
   - license_id (Foreign Key, Int, Nullable)
+  - payment_id (Foreign Key, Int, Nullable)
+  - status (Int)
+  - created_at (DateTime)
+  - updated_at (DateTime)
 - **Payment**
   - id (Primary Key, Int)
-  - student_id (Foreign Key, Int)
+  - user_id (Foreign Key, Int)
   - subscription_id (Foreign Key, Int, Nullable)
   - course_offering_id (Foreign Key, Int, Nullable)
   - amount (Int)
@@ -91,3 +95,6 @@ Additionally, I intended to call this model `Transaction`, but there seemed to b
 
 #### Courses
 I intentionally left the course name nullable, as it seemed reasonable that the name of a course could simply be its subject and number (e.g. "Math 101"), but an administrator could optionally give it a name (e.g. "Intro to Calculus").
+
+#### Course Offerings
+I have assumed this is an online platform, so there are no seat limitations regarding how many people can access a course. If there could be in-person classes, we could add an optional `seats` field (or similar) to the model/table, and schools could set to be the number of available spots in the class, and it would be considered unavailable once the number of users signed up for it reached the number of available spots. There would also be additional complexity to ensure the courses weren't overbooked, and it could be nice to add a waitlist feature in this case as well.
