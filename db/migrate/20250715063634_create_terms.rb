@@ -11,7 +11,7 @@ class CreateTerms < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :terms, [:school_id, :year, :sequence_num], unique: true
-    add_index :terms, [:school_id, :name], unique: true
+    add_index :terms, [ :school_id, :year, :sequence_num ], unique: true
+    add_index :terms, [ :school_id, :name ], unique: true
   end
 end

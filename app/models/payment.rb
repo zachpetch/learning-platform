@@ -2,7 +2,7 @@ class Payment < ApplicationRecord
   belongs_to :user
   belongs_to :subscription, optional: true
   belongs_to :course_offering, optional: true
-  has_one :subscription_payment, class_name: 'Subscription', foreign_key: 'payment_id'
+  has_one :subscription_payment, class_name: "Subscription", foreign_key: "payment_id"
 
   validates :amount, presence: true, numericality: { greater_than: 0 }
   validates :provider, presence: true

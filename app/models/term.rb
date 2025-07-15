@@ -11,13 +11,13 @@ class Term < ApplicationRecord
   validates :start_date, presence: true
   validates :end_date, presence: true
   validates :name, uniqueness: { scope: :school_id }
-  validates :sequence_num, uniqueness: { scope: [:school_id, :year] }
+  validates :sequence_num, uniqueness: { scope: [ :school_id, :year ] }
 
   validate :end_date_after_start_date
 
-  scope :current, -> { where('start_date <= ? AND end_date >= ?', Date.current, Date.current) }
-  scope :upcoming, -> { where('start_date > ?', Date.current) }
-  scope :past, -> { where('end_date < ?', Date.current) }
+  scope :current, -> { where("start_date <= ? AND end_date >= ?", Date.current, Date.current) }
+  scope :upcoming, -> { where("start_date > ?", Date.current) }
+  scope :past, -> { where("end_date < ?", Date.current) }
 
   def current?
     Date.current.between?(start_date, end_date)
@@ -35,7 +35,7 @@ class Term < ApplicationRecord
 
   def end_date_after_start_date
     return unless start_date && end_date
-    
+
     if end_date <= start_date
       errors.add(:end_date, "must be after start date")
     end

@@ -10,7 +10,7 @@ class CreateCourses < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :courses, [:school_id, :subject, :number], unique: true
-    add_index :courses, [:school_id, :subject]
+    add_index :courses, [ :school_id, :subject, :number ], unique: true
+    add_index :courses, [ :school_id, :subject ]
   end
 end
