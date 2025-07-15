@@ -1,0 +1,44 @@
+<h1>Student Access Dashboard</h1>
+
+<%= form_with url: dashboard_path, method: :get, local: true do |f| %>
+  <div style="margin-bottom: 1rem;">
+    <label for="student_name">Student:</label>
+    <%= text_field_tag :student_name, params[:student_name] %>
+
+    <label for="course">Course:</label>
+    <%= text_field_tag :course, params[:course] %>
+
+    <label for="term_id">Term:</label>
+    <%= select_tag :term_id, options_from_collection_for_select(Term.all.order(start_date: :desc), :id, :name, params[:term_id]), include_blank: true %>
+
+    <label for="status">Access Status:</label>
+    <%= select_tag :status, options_for_select([["Current", "current"], ["Past", "past"], ["Upcoming", "upcoming"]], params[:status]), include_blank: true %>
+
+    <%= submit_tag "Filter" %>
+  </div>
+<% end %>
+
+<table>
+  <thead>
+  <tr>
+    <th>Student</th>
+    <th>Course</th>
+    <th>Term</th>
+    <th>Start Date</th>
+    <th>End Date</th>
+    <th>Status</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @accesses.each do |access| %>
+    <tr>
+      <td><%= access[:user].first_name %> <%= access[:user].last_name %></td>
+      <td><%= access[:course].subject %> <%= access[:course].number %></td>
+      <td><%= access[:term].name %></td>
+      <td><%= access[:term].start_date %></td>
+      <td><%= access[:term].end_date %></td>
+      <td><%= access[:access] %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
