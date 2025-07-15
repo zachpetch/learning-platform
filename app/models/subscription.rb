@@ -4,7 +4,7 @@ class Subscription < ApplicationRecord
   belongs_to :license, optional: true
   belongs_to :payment, optional: true
 
-  enum status: { active: 0, expired: 1, cancelled: 2 }
+  enum :status, [ :active, :expired, :cancelled ], default: :active
 
   validates :user_id, uniqueness: { scope: :term_id }
   validates :status, presence: true
