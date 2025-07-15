@@ -13,7 +13,6 @@ class CreatePayments < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :payments, :user_id
     add_index :payments, :provider_transaction_id, unique: true
     add_index :payments, :completed_at
   end
