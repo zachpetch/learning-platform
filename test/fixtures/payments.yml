@@ -5,17 +5,15 @@ one:
   subscription: one
   course_offering: one
   amount: 1
-  provider: MyString
-  provider_transaction_id: MyString
+  provider: Credit Card
+  provider_transaction_id: ABC-123-DX2025
   completed_at: 2025-07-14 23:36:55
-  refunded_at: 2025-07-14 23:36:55
 
 two:
   user: two
   subscription: two
   course_offering: two
   amount: 1
-  provider: MyString
-  provider_transaction_id: MyString
-  completed_at: 2025-07-14 23:36:55
-  refunded_at: 2025-07-14 23:36:55
+  provider: Credit Card
+  provider_transaction_id: ABC-124-DX2025
+  completed_at: 2025-07-14 23:38:55

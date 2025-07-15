@@ -1,7 +1,13 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
+UBC:
+  name: University of British Columbia
 
-two:
-  name: MyString
+UVic:
+  name: University of Victoria
+
+SFU:
+  name: Simon Fraser University
+
+OC:
+  name: Okanagan College

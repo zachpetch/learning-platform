@@ -6,4 +6,12 @@ one:
 
 two:
   course: two
+  term: one
+
+three:
+  course: four
+  term: one
+
+four:
+  course: one
   term: two

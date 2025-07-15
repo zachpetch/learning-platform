@@ -5,11 +5,11 @@ one:
   term: one
   license: one
   payment: one
-  status: 1
+  status: 0
 
 two:
   user: two
   term: two
   license: two
   payment: two
-  status: 1
+  status: 0
