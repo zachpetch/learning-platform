@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_16_183640) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_16_192910) do
   create_table "course_offerings", force: :cascade do |t|
     t.integer "course_id", null: false
     t.integer "term_id", null: false
@@ -115,6 +115,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_16_183640) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["first_name"], name: "index_users_on_first_name"
+    t.index ["last_name"], name: "index_users_on_last_name"
   end
 
   add_foreign_key "course_offerings", "courses"
