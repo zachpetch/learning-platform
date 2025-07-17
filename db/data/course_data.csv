@@ -1,0 +1,109 @@
+subject,number,name
+Anthropology,111,Linguistic Anthropology
+Anthropology,120,Anthropology of Religion
+Anthropology,201,Archaeology
+Anthropology,210,Biological Anthropology
+Anthropology,301,Cultural Anthropology
+Art,100,Digital Art
+Art,101,Art History
+Art,102,Sculpture
+Art,111,Painting I
+Art,120,Drawing I
+Astronomy,101,Stellar Structure
+Astronomy,111,Planetary Science
+Astronomy,120,Cosmology
+Astronomy,210,Intro to Astronomy
+Astronomy,301,Astrophysics
+Biology,100,Human Anatomy
+Biology,111,Cell Biology
+Biology,120,Ecology
+Biology,210,Genetics
+Biology,301,Evolutionary Biology
+Chemistry,100,General Chemistry II
+Chemistry,101,Organic Chemistry I
+Chemistry,102,Physical Chemistry
+Chemistry,201,General Chemistry I
+Chemistry,301,Inorganic Chemistry
+Computer Science,100,Intro to Computers
+Computer Science,101,Programming I
+Computer Science,102,Data Structures
+Computer Science,111,Databases
+Computer Science,120,Algorithms
+Computer Science,230,Intro to Machine Learning
+Economics,101,Development Economics
+Economics,102,Game Theory
+Economics,201,Microeconomics
+Economics,210,Econometrics
+Economics,301,Macroeconomics
+Engineering,111,Engineering Design
+Engineering,201,Thermodynamics
+Engineering,221,Statics
+Engineering,230,Dynamics
+Engineering,301,Circuits
+English,101,Intro to Literature
+English,111,Poetry and Drama
+English,120,Creative Writing
+English,210,Modern American Fiction
+English,301,Advance Literature
+Gender Studies,100,Masculinity Studies
+Gender Studies,111,Feminist Theory
+Gender Studies,120,Intro to Gender Studies
+Gender Studies,201,Intersectionality
+Gender Studies,301,Gender and Media
+Geography,120,Urban Geography
+Geography,201,GIS Fundamentals
+Geography,221,Physical Geography
+Geography,230,Human Geography
+Geography,301,Climatology
+Indigenous Studies,100,Indigenous Literatures
+Indigenous Studies,101,History of Indigenous Peoples
+Indigenous Studies,102,Cultural Traditions
+Indigenous Studies,120,Intro to Indigenous Studies
+Indigenous Studies,230,Indigenous Law
+Mathematics,101,Calculus I
+Mathematics,111,Calculus II
+Mathematics,120,Discrete Mathematics
+Mathematics,201,Linear Algebra
+Mathematics,211,Differential Equations
+Mathematics,221,Calculus III
+Music,100,Ensemble Performance
+Music,101,History of Western Music
+Music,111,Composition
+Music,120,Aural Skills
+Music,210,Music Theory I
+Philosophy,100,Ethics
+Philosophy,101,Intro to Philosophy
+Philosophy,102,Metaphysics
+Philosophy,111,Logic
+Philosophy,201,Philosophy of Mind
+Philosophy,230,What does it mean to be a good person?
+Physics,100,Optics
+Physics,102,Quantum Physics
+Physics,111,Thermodynamics
+Physics,120,Classical Mechanics
+Physics,210,Electromagnetism
+Political Science,100,Political Theory
+Political Science,101,Comparative Politics
+Political Science,102,International Relations
+Political Science,201,Intro to Political Science
+Political Science,221,Public Policy
+Psychology,100,Social Psychology
+Psychology,101,Intro to Psychology
+Psychology,120,Abnormal Psychology
+Psychology,221,Developmental Psychology
+Psychology,230,Cognitive Psychology
+Sociology,111,Race and Ethnicity
+Sociology,120,Urban Sociology
+Sociology,210,Intro to Sociology
+Sociology,221,Sociology of Gender
+Sociology,230,Sociological Theory
+Statistics,101,Regression Analysis
+Statistics,201,Intro to Statistics
+Statistics,210,Bayesian Statistics
+Statistics,221,Probability Theory
+Statistics,230,Statistical Inference
+Theatre,100,Theatre History
+Theatre,101,Directing
+Theatre,201,Acting I
+Theatre,210,Intro to Theatre
+Theatre,301,Stagecraft
