@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+UBC:
+  name: University of British Columbia
+  short_name: UBC
+
+UVic:
+  name: University of Victoria
+  short_name: UVic
+
+SFU:
+  name: Simon Fraser University
+  short_name: SFU
+
+OC:
+  name: Okanagan College
+  short_name: OC

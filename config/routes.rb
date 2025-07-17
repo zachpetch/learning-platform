@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  get "/dashboard", to: "dashboard#index"
+  resources :schools
+  resources :users
+  get "/", to: "dashboard#index"
 
   resource :session
   resources :passwords, param: :token

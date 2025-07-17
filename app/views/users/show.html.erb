@@ -1,0 +1,134 @@
+<% content_for :title do %>
+  <%= @user.name %>
+<% end %>
+
+<div class="max-w-4xl mx-auto p-6">
+  <% if notice %>
+    <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm font-medium text-green-800"><%= notice %></p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="mb-8">
+    <h1 class="text-3xl text-gray-900 mb-2">User Profile: <span class="font-bold"><%= @user.name %></span></h1>
+    <p class="text-gray-600">View and manage user information</p>
+  </div>
+
+  <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-8">
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-800">User Details</h2>
+    </div>
+    <div class="p-6">
+      <%= render @user %>
+    </div>
+  </div>
+
+  <!-- Terms -->
+  <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-8">
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-800">Terms</h2>
+    </div>
+    <div class="p-6">
+      <% if @user.terms.any? %>
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <% @user.terms.each do |term| %>
+            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div class="flex items-start justify-between mb-2">
+                <h3 class="font-semibold text-gray-900"><%= term.name %></h3>
+              </div>
+              <p class="text-sm text-gray-600 mb-2">
+                <span class="inline-flex items-center">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0H5m14 0v-4a2 2 0 00-2-2h-2"></path>
+                  </svg>
+                  <%= term.school.short_name %>
+                </span>
+              </p>
+              <div class="flex items-center text-sm text-gray-500">
+                <svg class="size-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z"/>
+                </svg>
+                <%= term.start_date.strftime("%b %d, %Y") if term.start_date %> -
+                <%= term.end_date.strftime("%b %d, %Y") if term.end_date %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-8">
+          <svg class="size-12 mx-auto text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z"/>
+          </svg>
+          <p class="mt-2 text-sm text-gray-500">No terms found for this student.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Courses -->
+  <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-8">
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-800">Courses</h2>
+    </div>
+    <div class="p-6">
+      <% if @user.course_offerings.any? %>
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <% @user.course_offerings.each do |course_offering| %>
+            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div class="flex items-start justify-between">
+                <h3 class="font-semibold text-gray-900"><%= course_offering.course.course_code %></h3>
+              </div>
+              <p class="font-semibold text-gray-600 mb-2"><%= course_offering.course.name %></p>
+              <p class="text-sm text-gray-600">
+                <span class="inline-flex items-center">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0H5m14 0v-4a2 2 0 00-2-2h-2"></path>
+                  </svg>
+                  <%= course_offering.course.school.short_name %>
+                </span>
+              </p>
+              <div class="flex items-center text-sm text-gray-500">
+                <svg class="size-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z"/>
+                </svg>
+                <%= course_offering.term.name %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-8">
+          <svg class="mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/>
+          </svg>
+          <p class="mt-2 text-sm text-gray-500">No courses found for this student.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-4 items-center justify-between">
+    <div class="flex flex-wrap gap-3">
+      <%= link_to "Edit student details", edit_user_path(@user),
+                  class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors duration-200 shadow-sm hover:shadow-md" %>
+
+      <%= link_to "Back to users", users_path,
+                  class: "inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-md transition-colors duration-200 shadow-sm hover:shadow-md" %>
+    </div>
+
+    <div class="flex items-center">
+      <%= button_to "Delete student", @user, method: :delete,
+                    data: { confirm: "Are you sure you want to delete this user? This action cannot be undone." },
+                    class: "inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors duration-200 shadow-sm hover:shadow-md" %>
+    </div>
+  </div>
+</div>

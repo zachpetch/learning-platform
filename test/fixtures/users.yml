@@ -5,15 +5,3 @@ admin:
   password_digest: <%= password_digest %>
   first_name: Admin
   last_name: Account
-
-one:
-  email_address: judy@paramountpictures.com
-  password_digest: <%= password_digest %>
-  first_name: Judy
-  last_name: Garland
-
-two:
-  email_address: morgan@freemansbees.com
-  password_digest: <%= password_digest %>
-  first_name: Morgan
-  last_name: Freeman

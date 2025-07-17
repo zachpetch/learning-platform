@@ -49,6 +49,12 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # For generating fake users to seed into the database
+  gem "faker"
+
+  # Read CSV files
+  gem "csv"
 end
 
 group :development do

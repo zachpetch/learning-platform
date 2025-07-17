@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_16_192910) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_17_184628) do
   create_table "course_offerings", force: :cascade do |t|
     t.integer "course_id", null: false
     t.integer "term_id", null: false
@@ -38,6 +38,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_16_192910) do
     t.string "code", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "term_count", default: 1, null: false
     t.index ["code"], name: "index_licenses_on_code", unique: true
   end
 
@@ -56,6 +57,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_16_192910) do
     t.index ["course_offering_id"], name: "index_payments_on_course_offering_id"
     t.index ["provider_transaction_id"], name: "index_payments_on_provider_transaction_id", unique: true
     t.index ["subscription_id"], name: "index_payments_on_subscription_id"
+    t.index ["user_id", "course_offering_id"], name: "index_payments_on_user_id_and_course_offering_id", unique: true
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
 
@@ -80,12 +82,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_16_192910) do
     t.integer "user_id", null: false
     t.integer "term_id", null: false
     t.integer "license_id"
-    t.integer "payment_id"
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["license_id"], name: "index_subscriptions_on_license_id"
-    t.index ["payment_id"], name: "index_subscriptions_on_payment_id"
     t.index ["status"], name: "index_subscriptions_on_status"
     t.index ["term_id"], name: "index_subscriptions_on_term_id"
     t.index ["user_id", "term_id"], name: "index_subscriptions_on_user_id_and_term_id", unique: true
@@ -127,7 +127,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_16_192910) do
   add_foreign_key "payments", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "subscriptions", "licenses"
-  add_foreign_key "subscriptions", "payments"
   add_foreign_key "subscriptions", "terms"
   add_foreign_key "subscriptions", "users"
   add_foreign_key "terms", "schools"

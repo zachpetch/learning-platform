@@ -21,7 +21,7 @@ class Course < ApplicationRecord
   def shorthand
     return "" if subject.blank?
 
-    vowels = [ "A", "E", "I", "O", "U" ]
+    vowels = [ "A", "E", "I", "O", "U", "Y" ]
     upper_case_subject = subject.upcase
 
     # Use the first 3 characters unless second or third character is a vowel, then use the first 4

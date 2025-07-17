@@ -1,44 +1,167 @@
-<h1>Student Access Dashboard</h1>
+<% page_title "Dashboard" %>
 
-<%= form_with url: dashboard_path, method: :get, local: true do |f| %>
-  <div style="margin-bottom: 1rem;">
-    <label for="student_name">Student:</label>
-    <%= text_field_tag :student_name, params[:student_name] %>
-
-    <label for="course">Course:</label>
-    <%= text_field_tag :course, params[:course] %>
-
-    <label for="term_id">Term:</label>
-    <%= select_tag :term_id, options_from_collection_for_select(Term.all.order(start_date: :desc), :id, :name, params[:term_id]), include_blank: true %>
-
-    <label for="status">Access Status:</label>
-    <%= select_tag :status, options_for_select([["Current", "current"], ["Past", "past"], ["Upcoming", "upcoming"]], params[:status]), include_blank: true %>
-
-    <%= submit_tag "Filter" %>
+<div class="max-w-7xl mx-auto p-6">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
+    <p class="text-gray-600">Overview of schools and students</p>
   </div>
-<% end %>
 
-<table>
-  <thead>
-  <tr>
-    <th>Student</th>
-    <th>Course</th>
-    <th>Term</th>
-    <th>Start Date</th>
-    <th>End Date</th>
-    <th>Status</th>
-  </tr>
-  </thead>
-  <tbody>
-  <% @accesses.each do |access| %>
-    <tr>
-      <td><%= access[:user].first_name %> <%= access[:user].last_name %></td>
-      <td><%= access[:course].subject %> <%= access[:course].number %></td>
-      <td><%= access[:term].name %></td>
-      <td><%= access[:term].start_date %></td>
-      <td><%= access[:term].end_date %></td>
-      <td><%= access[:access] %></td>
-    </tr>
+  <!-- Schools -->
+  <% if @schools.any? %>
+    <section class="mb-12">
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          <h2 class="text-xl font-semibold text-gray-800">Schools</h2>
+        </div>
+        <div class="p-6">
+          <div class="mb-6">
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="size-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
+                </svg>
+              </div>
+              <input type="text" placeholder="Search schools..." id="schoolSearch"
+                     class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"/>
+            </div>
+          </div>
+
+          <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <% @schools.each do |school| %>
+              <a href="/schools/<%= school.id %>" class="block">
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow duration-200">
+                  <div class="flex items-start">
+                    <div class="flex-shrink-0 mr-3">
+                      <svg class="size-6 text-blue-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5H15v-18a.75.75 0 0 0 0-1.5H3ZM6.75 19.5v-2.25a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-3a.75.75 0 0 1-.75-.75ZM6 6.75A.75.75 0 0 1 6.75 6h.75a.75.75 0 0 1 0 1.5h-.75A.75.75 0 0 1 6 6.75ZM6.75 9a.75.75 0 0 0 0 1.5h.75a.75.75 0 0 0 0-1.5h-.75ZM6 12.75a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 0 1.5h-.75a.75.75 0 0 1-.75-.75ZM10.5 6a.75.75 0 0 0 0 1.5h.75a.75.75 0 0 0 0-1.5h-.75Zm-.75 3.75A.75.75 0 0 1 10.5 9h.75a.75.75 0 0 1 0 1.5h-.75a.75.75 0 0 1-.75-.75ZM10.5 12a.75.75 0 0 0 0 1.5h.75a.75.75 0 0 0 0-1.5h-.75ZM16.5 6.75v15h5.25a.75.75 0 0 0 0-1.5H21v-12a.75.75 0 0 0 0-1.5h-4.5Zm1.5 4.5a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75h-.008a.75.75 0 0 1-.75-.75v-.008Zm.75 2.25a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75v-.008a.75.75 0 0 0-.75-.75h-.008ZM18 17.25a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75h-.008a.75.75 0 0 1-.75-.75v-.008Z" clip-rule="evenodd"/>
+                      </svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <h3 class="text-lg font-semibold text-gray-900 truncate"><%= school.short_name %></h3>
+                      <p class="text-sm text-gray-600 mt-1"><%= school.name %></p>
+                    </div>
+                  </div>
+
+                  <div class="mt-4 flex items-center justify-between">
+                    <span class="text-xs text-gray-400">Click to view profile</span>
+                    <svg class="size-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
+                    </svg>
+                  </div>
+                </div>
+              </a>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </section>
   <% end %>
-  </tbody>
-</table>
+
+  <!-- Students -->
+  <% if @students.any? %>
+    <section>
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          <h2 class="text-xl font-semibold text-gray-800">Students</h2>
+        </div>
+        <div class="p-6">
+          <div class="mb-6">
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="size-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
+                </svg>
+              </div>
+              <input type="text" placeholder="Search students..." id="studentSearch"
+                     class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"/>
+            </div>
+          </div>
+
+          <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <% @students.each do |student| %>
+              <a href="/users/<%= student.id %>" class="block">
+                <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 hover:shadow-md hover:border-blue-300 transition-all duration-200">
+                  <div class="flex items-start mb-4">
+                    <div class="flex-shrink-0 mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-8 text-gray-400">
+                        <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd"/>
+                      </svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <h3 class="text-lg font-semibold text-gray-900 truncate"><%= student.name %></h3>
+                    </div>
+                  </div>
+
+                  <div class="space-y-3">
+                    <% if student.subscriptions.any? %>
+                      <div>
+                        <div class="flex items-center mb-2">
+                          <svg class="size-4 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z"/>
+                          </svg>
+                          <span class="text-sm font-medium text-gray-700">
+                            <%= student.subscriptions.count %>
+                            Subscription<%= student.subscriptions.count != 1 ? 's' : '' %>
+                          </span>
+                        </div>
+                        <ul class="ml-6 space-y-1">
+                          <% student.subscriptions.each do |subscription| %>
+                            <li class="text-sm text-gray-600">• <%= subscription.display_name %></li>
+                          <% end %>
+                        </ul>
+                      </div>
+                    <% end %>
+
+                    <% if student.courses.any? %>
+                      <div>
+                        <div class="flex items-center mb-2">
+                          <svg class="size-4 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/>
+                          </svg>
+                          <span class="text-sm font-medium text-gray-700">
+                            <%= student.courses.count %> Course<%= student.courses.count != 1 ? 's' : '' %>
+                          </span>
+                        </div>
+                        <ul class="ml-6 space-y-1">
+                          <% student.courses.each do |course| %>
+                            <li class="text-sm text-gray-600">• <%= course.name %></li>
+                          <% end %>
+                        </ul>
+                      </div>
+                    <% end %>
+
+                    <% if !student.subscriptions.any? and !student.courses.any? %>
+                      <div class="flex items-center text-sm text-gray-500">
+                        <svg class="size-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/>
+                        </svg>
+                        <span>No subscriptions or courses.</span>
+                      </div>
+                    <% end %>
+                  </div>
+
+                  <div class="mt-4 flex items-center justify-between">
+                    <span class="text-xs text-gray-400">Click to view profile</span>
+                    <svg class="size-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
+                    </svg>
+                  </div>
+                </div>
+              </a>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </section>
+  <% end %>
+
+  <% if !@schools.any? && !@students.any? %>
+    <div class="bg-white shadow-lg rounded-lg p-12 text-center">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-16 text-gray-400 mx-auto mb-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/>
+      </svg>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">Welcome to the Dashboard.</h3>
+      <p class="text-gray-600">No schools or students to display at this time.</p>
+    </div>
+  <% end %>
+</div>
