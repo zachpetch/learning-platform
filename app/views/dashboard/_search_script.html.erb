@@ -1,0 +1,92 @@
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let schoolSearchTimeout;
+        let studentSearchTimeout;
+
+        // School search functionality
+        const schoolSearch = document.getElementById('schoolSearch');
+        const schoolSearchSpinner = document.getElementById('schoolSearchSpinner');
+        const schoolsGrid = document.getElementById('schoolsGrid');
+
+        if (schoolSearch) {
+            schoolSearch.addEventListener('input', function () {
+                clearTimeout(schoolSearchTimeout);
+                const query = this.value.trim();
+
+                schoolSearchTimeout = setTimeout(() => {
+                    performSearch('schools', query, schoolSearchSpinner, schoolsGrid);
+                }, 300); // 300ms delay
+            });
+        }
+
+        // Student search functionality
+        const studentSearch = document.getElementById('studentSearch');
+        const studentSearchSpinner = document.getElementById('studentSearchSpinner');
+        const studentsGrid = document.getElementById('studentsGrid');
+
+        if (studentSearch) {
+            studentSearch.addEventListener('input', function () {
+                clearTimeout(studentSearchTimeout);
+                const query = this.value.trim();
+
+                studentSearchTimeout = setTimeout(() => {
+                    performSearch('students', query, studentSearchSpinner, studentsGrid);
+                }, 300); // 300ms delay
+            });
+        }
+
+        function performSearch(type, query, spinner, gridContainer) {
+            // Show spinner
+            spinner.classList.remove('hidden');
+
+            // Build URL with search parameters
+            const url = new URL(window.location.href);
+            if (query) {
+                url.searchParams.set(type === 'schools' ? 'school_search' : 'student_search', query);
+            } else {
+                url.searchParams.delete(type === 'schools' ? 'school_search' : 'student_search');
+            }
+
+            // Update browser URL without reload
+            window.history.replaceState({}, '', url);
+
+            // Make AJAX request
+            fetch(url.pathname + url.search, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'text/html'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    // Update the grid content
+                    gridContainer.innerHTML = html;
+
+                    // Hide spinner
+                    spinner.classList.add('hidden');
+                })
+                .catch(error => {
+                    console.error('Search error:', error);
+
+                    // Hide spinner
+                    spinner.classList.add('hidden');
+
+                    // Show error message
+                    gridContainer.innerHTML = `
+        <div class="text-center py-8">
+          <svg class="size-12 text-red-400 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/>
+          </svg>
+          <p class="text-red-500">Error loading search results. Please try again.</p>
+        </div>
+      `;
+                });
+        }
+    });
+</script>
