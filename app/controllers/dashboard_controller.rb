@@ -7,23 +7,47 @@ class DashboardController < ApplicationController
   end
 
   def search_schools_ajax
-    @schools = search_schools(params[:school_search]).page(params[:schools_page]).per(8)
-    render partial: "schools_grid", locals: { schools: @schools }
+    begin
+      @schools = search_schools(params[:school_search]).page(params[:schools_page]).per(8)
+      render partial: "schools_grid", locals: { schools: @schools }
+    rescue => e
+      Rails.logger.error "Search schools error: #{e.message}"
+      Rails.logger.error e.backtrace.join("\n")
+      render json: { error: "Search failed: #{e.message}" }, status: 500
+    end
   end
 
   def search_terms_ajax
-    @terms = search_terms(params[:term_search]).page(params[:terms_page]).per(8)
-    render partial: "terms_grid", locals: { terms: @terms }
+    begin
+      @terms = search_terms(params[:term_search]).page(params[:terms_page]).per(8)
+      render partial: "terms_grid", locals: { terms: @terms }
+    rescue => e
+      Rails.logger.error "Search terms error: #{e.message}"
+      Rails.logger.error e.backtrace.join("\n")
+      render json: { error: "Search failed: #{e.message}" }, status: 500
+    end
   end
 
   def search_courses_ajax
-    @courses = search_courses(params[:course_search]).page(params[:courses_page]).per(8)
-    render partial: "courses_grid", locals: { courses: @courses }
+    begin
+      @courses = search_courses(params[:course_search]).page(params[:courses_page]).per(8)
+      render partial: "courses_grid", locals: { courses: @courses }
+    rescue => e
+      Rails.logger.error "Search courses error: #{e.message}"
+      Rails.logger.error e.backtrace.join("\n")
+      render json: { error: "Search failed: #{e.message}" }, status: 500
+    end
   end
 
   def search_students_ajax
-    @students = search_students(params[:student_search]).page(params[:students_page]).per(6)
-    render partial: "students_grid", locals: { students: @students }
+    begin
+      @students = search_students(params[:student_search]).page(params[:students_page]).per(6)
+      render partial: "students_grid", locals: { students: @students }
+    rescue => e
+      Rails.logger.error "Search students error: #{e.message}"
+      Rails.logger.error e.backtrace.join("\n")
+      render json: { error: "Search failed: #{e.message}" }, status: 500
+    end
   end
 
   private
@@ -59,7 +83,7 @@ class DashboardController < ApplicationController
 
     if query.present?
       courses = courses.where(
-        "LOWER(subject) LIKE ? OR number LIKE ? OR LOWER(name) LIKE ? OR LOWER(subject || ' ' || number) LIKE ?",
+        "LOWER(subject) LIKE ? OR CAST(number AS TEXT) LIKE ? OR LOWER(name) LIKE ? OR LOWER(subject || ' ' || CAST(number AS TEXT)) LIKE ?",
         "%#{query.downcase}%", "%#{query.downcase}%", "%#{query.downcase}%", "%#{query.downcase}%"
       )
     end

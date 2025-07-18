@@ -7,6 +7,8 @@ Rails.application.routes.draw do
   resources :dashboard, only: [ :index ] do
     collection do
       get :search_schools_ajax
+      get :search_terms_ajax
+      get :search_courses_ajax
       get :search_students_ajax
     end
   end

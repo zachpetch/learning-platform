@@ -1,1 +1,39 @@
-<h1>Courses</h1>
+<div class="mb-4 flex justify-between items-center">
+  <span class="text-sm text-gray-600">
+    <%= page_entries_info @courses, entry_name: 'course' %>
+  </span>
+</div>
+
+<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+  <% @courses.each do |course| %>
+    <a href="/courses/<%= course.id %>" class="block">
+      <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow duration-200">
+        <div class="flex items-start">
+          <div class="flex-shrink-0 mr-3">
+            <svg class="size-6 text-blue-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path fill-rule="evenodd" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-lg font-semibold text-gray-900 truncate"><%= course.subject %> <%= course.number %></h3>
+            <p class="text-sm text-gray-600 mt-1"><%= course.name %></p>
+            <% if course.respond_to?(:school) && course.school %>
+              <p class="text-xs text-gray-500 mt-1"><%= course.school.name %></p>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="mt-4 flex items-center justify-between">
+          <span class="text-xs text-gray-400">Click to view details</span>
+          <svg class="size-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
+          </svg>
+        </div>
+      </div>
+    </a>
+  <% end %>
+</div>
+
+<div class="mt-6" data-pagination-type="courses">
+  <%= paginate @courses, param_name: :courses_page, params: { course_search: params[:course_search] } %>
+</div>

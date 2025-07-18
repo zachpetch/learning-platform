@@ -94,6 +94,16 @@
         }
 
         function performSearch(type, query, spinner, gridContainer, page = null) {
+            console.log(`Performing search for ${type} with query: "${query}"`);
+
+            if (!spinner || !gridContainer) {
+                console.error(`Missing elements for ${type} search:`, {
+                    spinner: !!spinner,
+                    gridContainer: !!gridContainer
+                });
+                return;
+            }
+
             spinner.classList.remove('hidden');
 
             const baseUrlMap = {
@@ -103,7 +113,13 @@
                 students: '/dashboard/search_students_ajax'
             };
 
-            const baseUrl = baseUrlMap[type] || '/dashboard/search_students_ajax';
+            const baseUrl = baseUrlMap[type];
+            if (!baseUrl) {
+                console.error(`Unknown search type: ${type}`);
+                spinner.classList.add('hidden');
+                return;
+            }
+
             const url = new URL(baseUrl, window.location.origin);
 
             const searchParamMap = {
@@ -121,42 +137,50 @@
             };
 
             if (query) {
-                const searchParam = searchParamMap[type] || 'student_search';
+                const searchParam = searchParamMap[type];
                 url.searchParams.set(searchParam, query);
             }
 
             if (page) {
-                const pageParam = pageParamMap[type] || 'students_page';
+                const pageParam = pageParamMap[type];
                 url.searchParams.set(pageParam, page);
             }
+
+            console.log(`Fetching: ${url.href}`);
 
             fetch(url.href, {
                 method: 'GET',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'text/html'
+                    'Accept': 'text/html',
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 }
             })
                 .then(response => {
+                    console.log(`Response status: ${response.status}`);
                     if (!response.ok) {
-                        throw new Error('Network response was not ok');
+                        return response.text().then(text => {
+                            throw new Error(`HTTP ${response.status}: ${text}`);
+                        });
                     }
                     return response.text();
                 })
                 .then(html => {
+                    console.log(`Search successful for ${type}`);
                     gridContainer.innerHTML = html;
                     attachPaginationHandlers();
                     spinner.classList.add('hidden');
                 })
                 .catch(error => {
-                    console.error('Search error:', error);
+                    console.error(`Search error for ${type}:`, error);
                     spinner.classList.add('hidden');
                     gridContainer.innerHTML = `
                         <div class="text-center py-8">
                           <svg class="size-12 text-red-400 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/>
                           </svg>
-                          <p class="text-red-500">Error loading search results. Please try again.</p>
+                          <p class="text-red-500">Error loading search results: ${error.message}</p>
+                          <p class="text-gray-500 text-sm mt-2">Check the console for more details.</p>
                         </div>
                       `;
                 });
@@ -176,50 +200,46 @@
             if (!paginationContainer) return;
 
             const paginationType = paginationContainer.dataset.paginationType;
+            console.log(`Pagination clicked for ${paginationType}`);
 
-            if (paginationType === 'schools') {
-                e.preventDefault();
+            const spinnerMap = {
+                schools: schoolSearchSpinner,
+                terms: termSearchSpinner,
+                courses: courseSearchSpinner,
+                students: studentSearchSpinner
+            };
 
-                const url = new URL(target.href);
-                const schoolsPage = url.searchParams.get('schools_page') || '1';
+            const gridMap = {
+                schools: schoolsGrid,
+                terms: termsGrid,
+                courses: coursesGrid,
+                students: studentsGrid
+            };
 
-                const currentSearch = document.getElementById('schoolSearch')?.value.trim() || '';
-                performSearch('schools', currentSearch, schoolSearchSpinner, schoolsGrid, schoolsPage);
+            const searchMap = {
+                schools: schoolSearch,
+                terms: termSearch,
+                courses: courseSearch,
+                students: studentSearch
+            };
+
+            const spinner = spinnerMap[paginationType];
+            const grid = gridMap[paginationType];
+            const searchInput = searchMap[paginationType];
+
+            if (!spinner || !grid) {
+                console.error(`Missing elements for ${paginationType} pagination`);
                 return;
             }
 
-            if (paginationType === 'terms') {
-                e.preventDefault();
+            e.preventDefault();
 
-                const url = new URL(target.href);
-                const termsPage = url.searchParams.get('terms_page') || '1';
+            const url = new URL(target.href);
+            const pageParam = `${paginationType}_page`;
+            const page = url.searchParams.get(pageParam) || '1';
 
-                const currentSearch = document.getElementById('termSearch')?.value.trim() || '';
-                performSearch('terms', currentSearch, termSearchSpinner, termsGrid, termsPage);
-                return;
-            }
-
-            if (paginationType === 'courses') {
-                e.preventDefault();
-
-                const url = new URL(target.href);
-                const coursesPage = url.searchParams.get('courses_page') || '1';
-
-                const currentSearch = document.getElementById('courseSearch')?.value.trim() || '';
-                performSearch('courses', currentSearch, courseSearchSpinner, coursesGrid, coursesPage);
-                return;
-            }
-
-            if (paginationType === 'students') {
-                e.preventDefault();
-
-                const url = new URL(target.href);
-                const studentsPage = url.searchParams.get('students_page') || '1';
-
-                const currentSearch = document.getElementById('studentSearch')?.value.trim() || '';
-                performSearch('students', currentSearch, studentSearchSpinner, studentsGrid, studentsPage);
-                return;
-            }
+            const currentSearch = searchInput ? searchInput.value.trim() : '';
+            performSearch(paginationType, currentSearch, spinner, grid, page);
         }
 
         attachPaginationHandlers();
@@ -235,7 +255,10 @@
                 const courseSearch = document.getElementById('courseSearch');
                 const studentSearch = document.getElementById('studentSearch');
 
-                if ((schoolSearch && !schoolSearch.searchHandler) || (termSearch && !termSearch.searchHandler) || (courseSearch && !courseSearch.searchHandler) || (studentSearch && !studentSearch.searchHandler)) {
+                if ((schoolSearch && !schoolSearch.searchHandler) ||
+                    (termSearch && !termSearch.searchHandler) ||
+                    (courseSearch && !courseSearch.searchHandler) ||
+                    (studentSearch && !studentSearch.searchHandler)) {
                     initializeSearch();
                 }
             }, 100);
