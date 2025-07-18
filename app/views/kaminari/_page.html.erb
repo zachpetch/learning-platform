@@ -10,4 +10,3 @@
 <span class="page<%= ' current' if page.current? %>">
   <%= link_to_unless page.current?, page, url, { remote: remote, rel: page.rel } %>
 </span>
-<%#= link_to_unless page.current?, page, url, rel: page.rel, remote: remote, class: "relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 first:rounded-l-md last:rounded-r-md" %>
