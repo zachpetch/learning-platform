@@ -13,3 +13,21 @@ two:
   password_digest: <%= password_digest %>
   first_name: Two
   last_name: Example
+
+three:
+  email_address: three@example.com
+  password_digest: <%= password_digest %>
+  first_name: Three
+  last_name: Example
+
+four:
+  email_address: four@example.com
+  password_digest: <%= password_digest %>
+  first_name: Four
+  last_name: Example
+
+five:
+  email_address: five@example.com
+  password_digest: <%= password_digest %>
+  first_name: Five
+  last_name: Example

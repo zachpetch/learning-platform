@@ -5,10 +5,9 @@ class Subscription < ApplicationRecord
 
   enum :status, [ :active, :expired, :cancelled ], default: :active
 
-  validates :user_id, uniqueness: { scope: :term_id }
+  validates :user_id, presence: true, uniqueness: { scope: :term_id }
   validates :status, presence: true
-
-  validate :has_payment_or_license
+  validates :term_id, presence: true
 
   scope :current, -> { joins(:term).merge(Term.current) }
   scope :upcoming, -> { joins(:term).merge(Term.upcoming) }
@@ -23,15 +22,5 @@ class Subscription < ApplicationRecord
 
   def display_name
     "#{term.school.short_name}: #{term.name}"
-  end
-
-  private
-
-  def has_payment_or_license
-    if payment.blank? && license.blank?
-      errors.add(:base, "Subscription must have either a payment or a license")
-    elsif payment.present? && license.present?
-      errors.add(:base, "Subscription cannot have both a payment and a license")
-    end
   end
 end
