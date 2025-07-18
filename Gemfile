@@ -58,6 +58,9 @@ group :development, :test do
 
   # Read CSV files
   gem "csv"
+
+  # Assigns
+  gem "rails-controller-testing"
 end
 
 group :development do

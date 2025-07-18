@@ -10,6 +10,28 @@ module ActiveSupport
     # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
     fixtures :all
 
-    # Add more helper methods to be used by all tests here...
+    def sign_in(user)
+      session[:user_id] = user.id
+    end
+
+    def sign_out(user)
+      session.delete(:user_id)
+    end
+
+    def current_user
+      User.find(session[:user_id]) if session[:user_id]
+    end
+  end
+end
+
+module ActionDispatch
+  class IntegrationTest
+    def sign_in(user)
+      post session_url, params: { email_address: user.email_address, password: "password" }
+    end
+
+    def sign_out(user)
+      delete session_url
+    end
   end
 end

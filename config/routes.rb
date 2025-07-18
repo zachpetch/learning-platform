@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   resources :schools, only: [ :show ]
   resources :users, only: [ :show ]
-  get "/", to: "dashboard#index"
+  root "dashboard#index"
+  # get "/", to: "dashboard#index"
 
   resources :dashboard, only: [ :index ] do
     collection do
