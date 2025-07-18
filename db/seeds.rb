@@ -190,7 +190,9 @@ end
 Payment.insert_all(payments)
 
 # Subscriptions bought with licenses
-subscriptions = Subscription.where.not(id: Payment.select(:subscription_id))
+
+paid_subscription_ids = Payment.where.not(subscription_id: nil).pluck(:subscription_id)
+subscriptions = Subscription.where.not(id: paid_subscription_ids)
 license_ids = License.order("RANDOM()").limit(subscriptions.count).pluck(:id)
 license_ids = license_ids.cycle.take(subscriptions.count)
 
