@@ -1,6 +1,8 @@
 <script>
     function initializeSearch() {
         let schoolSearchTimeout;
+        let termSearchTimeout;
+        let courseSearchTimeout;
         let studentSearchTimeout;
 
         // School search
@@ -23,6 +25,50 @@
             };
 
             schoolSearch.addEventListener('input', schoolSearch.searchHandler);
+        }
+
+        // Term search
+        const termSearch = document.getElementById('termSearch');
+        const termSearchSpinner = document.getElementById('termSearchSpinner');
+        const termsGrid = document.getElementById('termsGrid');
+
+        if (termSearch) {
+            if (termSearch.searchHandler) {
+                termSearch.removeEventListener('input', termSearch.searchHandler);
+            }
+
+            termSearch.searchHandler = function () {
+                clearTimeout(termSearchTimeout);
+                const query = this.value.trim();
+
+                termSearchTimeout = setTimeout(() => {
+                    performSearch('terms', query, termSearchSpinner, termsGrid);
+                }, 300);
+            };
+
+            termSearch.addEventListener('input', termSearch.searchHandler);
+        }
+
+        // Course search
+        const courseSearch = document.getElementById('courseSearch');
+        const courseSearchSpinner = document.getElementById('courseSearchSpinner');
+        const coursesGrid = document.getElementById('coursesGrid');
+
+        if (courseSearch) {
+            if (courseSearch.searchHandler) {
+                courseSearch.removeEventListener('input', courseSearch.searchHandler);
+            }
+
+            courseSearch.searchHandler = function () {
+                clearTimeout(courseSearchTimeout);
+                const query = this.value.trim();
+
+                courseSearchTimeout = setTimeout(() => {
+                    performSearch('courses', query, courseSearchSpinner, coursesGrid);
+                }, 300);
+            };
+
+            courseSearch.addEventListener('input', courseSearch.searchHandler);
         }
 
         // Student search
@@ -50,15 +96,38 @@
         function performSearch(type, query, spinner, gridContainer, page = null) {
             spinner.classList.remove('hidden');
 
-            const baseUrl = type === 'schools' ? '/dashboard/search_schools_ajax' : '/dashboard/search_students_ajax';
+            const baseUrlMap = {
+                schools: '/dashboard/search_schools_ajax',
+                terms: '/dashboard/search_terms_ajax',
+                courses: '/dashboard/search_courses_ajax',
+                students: '/dashboard/search_students_ajax'
+            };
+
+            const baseUrl = baseUrlMap[type] || '/dashboard/search_students_ajax';
             const url = new URL(baseUrl, window.location.origin);
 
+            const searchParamMap = {
+                schools: 'school_search',
+                terms: 'term_search',
+                courses: 'course_search',
+                students: 'student_search'
+            };
+
+            const pageParamMap = {
+                schools: 'schools_page',
+                terms: 'terms_page',
+                courses: 'courses_page',
+                students: 'students_page'
+            };
+
             if (query) {
-                url.searchParams.set(type === 'schools' ? 'school_search' : 'student_search', query);
+                const searchParam = searchParamMap[type] || 'student_search';
+                url.searchParams.set(searchParam, query);
             }
 
             if (page) {
-                url.searchParams.set(type === 'schools' ? 'schools_page' : 'students_page', page);
+                const pageParam = pageParamMap[type] || 'students_page';
+                url.searchParams.set(pageParam, page);
             }
 
             fetch(url.href, {
@@ -103,7 +172,6 @@
             const target = e.target.closest('a');
             if (!target) return;
 
-            // Check if this link is within a pagination container with data attribute
             const paginationContainer = target.closest('[data-pagination-type]');
             if (!paginationContainer) return;
 
@@ -117,6 +185,28 @@
 
                 const currentSearch = document.getElementById('schoolSearch')?.value.trim() || '';
                 performSearch('schools', currentSearch, schoolSearchSpinner, schoolsGrid, schoolsPage);
+                return;
+            }
+
+            if (paginationType === 'terms') {
+                e.preventDefault();
+
+                const url = new URL(target.href);
+                const termsPage = url.searchParams.get('terms_page') || '1';
+
+                const currentSearch = document.getElementById('termSearch')?.value.trim() || '';
+                performSearch('terms', currentSearch, termSearchSpinner, termsGrid, termsPage);
+                return;
+            }
+
+            if (paginationType === 'courses') {
+                e.preventDefault();
+
+                const url = new URL(target.href);
+                const coursesPage = url.searchParams.get('courses_page') || '1';
+
+                const currentSearch = document.getElementById('courseSearch')?.value.trim() || '';
+                performSearch('courses', currentSearch, courseSearchSpinner, coursesGrid, coursesPage);
                 return;
             }
 
@@ -141,9 +231,11 @@
         window.addEventListener('focus', function () {
             setTimeout(function () {
                 const schoolSearch = document.getElementById('schoolSearch');
+                const termSearch = document.getElementById('termSearch');
+                const courseSearch = document.getElementById('courseSearch');
                 const studentSearch = document.getElementById('studentSearch');
 
-                if ((schoolSearch && !schoolSearch.searchHandler) || (studentSearch && !studentSearch.searchHandler)) {
+                if ((schoolSearch && !schoolSearch.searchHandler) || (termSearch && !termSearch.searchHandler) || (courseSearch && !courseSearch.searchHandler) || (studentSearch && !studentSearch.searchHandler)) {
                     initializeSearch();
                 }
             }, 100);

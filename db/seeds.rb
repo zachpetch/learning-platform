@@ -13,7 +13,7 @@ require 'faker'
 require 'securerandom'
 
 OFFERINGS_PER_TERM = 25
-SUBSCRIBERS_PER_TERM = 8
+MAX_SUBSCRIBERS_PER_TERM = 30
 TERMS_PER_SCHOOL = 7
 SCHOOL_COUNT = 29
 USER_COUNT = 18000
@@ -141,7 +141,8 @@ user_ids = User.pluck(:id)
 subscriptions = []
 
 Term.find_each do |term|
-  selected_user_ids = user_ids.sample(SUBSCRIBERS_PER_TERM)
+  sample_size = rand(1..MAX_SUBSCRIBERS_PER_TERM)
+  selected_user_ids = user_ids.sample(sample_size)
   selected_user_ids.each do |user_id|
     subscriptions << {
       user_id: user_id,
