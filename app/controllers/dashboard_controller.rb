@@ -56,9 +56,10 @@ class DashboardController < ApplicationController
     schools = School.all
 
     if query.present?
+      search_query = "%#{query.downcase}%"
       schools = schools.where(
         "LOWER(name) LIKE ? OR LOWER(short_name) LIKE ?",
-        "%#{query.downcase}%", "%#{query.downcase}%"
+        search_query, search_query
       )
     end
 
@@ -66,25 +67,27 @@ class DashboardController < ApplicationController
   end
 
   def search_terms(query)
-    terms = Term.all
+    terms = Term.includes(:school)
 
     if query.present?
-      terms = terms.where(
-        "LOWER(name) LIKE ?",
-        "%#{query.downcase}%"
+      search_query = "%#{query.downcase}%"
+      terms = terms.joins(:school).where(
+        "LOWER(terms.name) LIKE ? OR LOWER(schools.name) LIKE ? OR LOWER(schools.short_name) LIKE ?",
+        search_query, search_query, search_query
       )
     end
 
-    terms.order(:name)
+    terms.order(:id)
   end
 
   def search_courses(query)
-    courses = Course.all
+    courses = Course.includes(:school)
 
     if query.present?
-      courses = courses.where(
-        "LOWER(subject) LIKE ? OR CAST(number AS TEXT) LIKE ? OR LOWER(name) LIKE ? OR LOWER(subject || ' ' || CAST(number AS TEXT)) LIKE ?",
-        "%#{query.downcase}%", "%#{query.downcase}%", "%#{query.downcase}%", "%#{query.downcase}%"
+      search_query = "%#{query.downcase}%"
+      courses = courses.joins(:school).where(
+        "LOWER(courses.subject) LIKE ? OR CAST(courses.number AS TEXT) LIKE ? OR LOWER(courses.name) LIKE ? OR LOWER(courses.subject || ' ' || CAST(courses.number AS TEXT)) LIKE ? OR LOWER(schools.name) LIKE ? OR LOWER(schools.short_name) LIKE ?",
+        search_query, search_query, search_query, search_query, search_query, search_query
       )
     end
 
@@ -95,9 +98,10 @@ class DashboardController < ApplicationController
     students = User.all
 
     if query.present?
+      search_query = "%#{query.downcase}%"
       students = students.where(
         "LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ? OR LOWER(first_name || ' ' || last_name) LIKE ? OR LOWER(email_address) LIKE ?",
-        "%#{query.downcase}%", "%#{query.downcase}%", "%#{query.downcase}%", "%#{query.downcase}%"
+        search_query, search_query, search_query, search_query
       )
     end
 

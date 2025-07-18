@@ -101,6 +101,7 @@ could be made to make this look more polished.
 
 Note: I wrote this next part before starting to figure out the way partials work, and I've since started implementing
 a couple of view elements with them, but didn't have the time to re-do it all to be more cleanly put together.
+
 In that context, as well, I would like to learn a bit more about templating and components (whether this is done with
 React, or if there are standard Rails best practices in this regard) as, ideally, there wouldn't be a lot of repeated
 utility classes in each of the similarly styled components (like search fields or cards), but the style would be defined
@@ -114,15 +115,16 @@ through a gem, or something along those lines.
 #### Pagination and Searching/Filtering
 
 I wanted to do as much of this project using built-in Rails functionality, or other gems considered "best practice", but
-though there are some frameworks that enable searching/filtering and pagination without refreshing the whole page, I was
-not able to figure out how to do that with Rails before I was feeling pressed for time. So, I've implemented this
+though there are some frameworks that enable searching/filtering and pagination without refreshing the whole page, I
+had not yet figured out how to do that with Rails before I was feeling pressed for time. So, I've implemented this
 functionality using AJAX to make the requests, and set up the controller to recognize AJAX requests differently than
 standard GET requests, returning only the parts of the page that need to be updated, rather than refreshing the entire
 page.
 
 With that said, I'd be very interested to know if there is a built-in method in Rails, or what the standard practice is
-for doing this. I just started to come across some info about using "remote: true" to essentially send an async request.
-But not in time to make changes to how I put this together.
+for doing this. I just started to come across some info about using "remote: true" to send a async requests, and it
+seems like this is the path to pursue in order to learn more, but not in time to make changes to how I put this
+together.
 
 ### Soft Deletion
 
