@@ -66,6 +66,10 @@ class Term < ApplicationRecord
     self[:licensed_subscriptions_count] || subscriptions.joins(:license).distinct.count(:user_id)
   end
 
+  def subscription_for(user)
+    subscriptions.find_by(user: user)
+  end
+
   private
 
   def end_date_after_start_date

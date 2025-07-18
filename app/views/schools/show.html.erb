@@ -57,9 +57,9 @@
               </svg>
             </div>
             <div class="ml-4">
-              <p class="text-sm font-medium text-green-600">Current Term Subscriptions</p>
+              <p class="text-sm font-medium text-green-600">Total Subscriptions</p>
               <p class="text-2xl font-semibold text-green-900">
-                <%= @subscription_count %>
+                <%= @total_subscriptions_count %>
               </p>
             </div>
           </div>
@@ -73,9 +73,9 @@
               </svg>
             </div>
             <div class="ml-4">
-              <p class="text-sm font-medium text-purple-600">Courses Purchased for Current Term</p>
+              <p class="text-sm font-medium text-purple-600">Total Purchased Courses</p>
               <p class="text-2xl font-semibold text-purple-900">
-                <%= @course_payment_count %>
+                <%= @total_course_offering_count %>
               </p>
             </div>
           </div>
@@ -84,6 +84,61 @@
       </div>
     </div>
   </div>
+
+  <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-8">
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-800">Student Activity by Term Category</h2>
+    </div>
+    <div class="p-6 overflow-x-auto">
+      <table class="min-w-full text-sm text-left text-gray-700">
+        <thead>
+        <tr>
+          <th class="px-4 py-3 font-medium text-gray-600">Term Category</th>
+          <th class="px-4 py-3 font-medium text-gray-600">Subscriptions</th>
+          <th class="px-4 py-3 font-medium text-gray-600">Paid by CC</th>
+          <th class="px-4 py-3 font-medium text-gray-600">Licensed</th>
+          <th class="px-4 py-3 font-medium text-gray-600">Course Purchases</th>
+          <th class="px-4 py-3 font-medium text-gray-600">Unique Students</th>
+        </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+        <tr>
+          <td class="px-4 py-3 font-medium text-gray-800">Past</td>
+          <td class="px-4 py-3"><%= @past_subscriptions_count %></td>
+          <td class="px-4 py-3"><%= @past_paid_subscriptions_count %></td>
+          <td class="px-4 py-3"><%= @past_licensed_subscriptions_count %></td>
+          <td class="px-4 py-3"><%= @past_course_offering_count %></td>
+          <td class="px-4 py-3"><%= @past_student_count %></td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3 font-medium text-gray-800">Current</td>
+          <td class="px-4 py-3"><%= @current_subscriptions_count %></td>
+          <td class="px-4 py-3"><%= @current_paid_subscriptions_count %></td>
+          <td class="px-4 py-3"><%= @current_licensed_subscriptions_count %></td>
+          <td class="px-4 py-3"><%= @current_course_offering_count %></td>
+          <td class="px-4 py-3"><%= @current_student_count %></td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3 font-medium text-gray-800">Future</td>
+          <td class="px-4 py-3"><%= @upcoming_subscriptions_count %></td>
+          <td class="px-4 py-3"><%= @upcoming_paid_subscriptions_count %></td>
+          <td class="px-4 py-3"><%= @upcoming_licensed_subscriptions_count %></td>
+          <td class="px-4 py-3"><%= @upcoming_course_offering_count %></td>
+          <td class="px-4 py-3"><%= @upcoming_student_count %></td>
+        </tr>
+        <tr class="bg-gray-50 font-semibold">
+          <td class="px-4 py-3 text-gray-900">Total</td>
+          <td class="px-4 py-3 text-gray-900"><%= @total_subscriptions_count %></td>
+          <td class="px-4 py-3 text-gray-900"><%= @total_paid_subscriptions_count %></td>
+          <td class="px-4 py-3 text-gray-900"><%= @total_licensed_subscriptions_count %></td>
+          <td class="px-4 py-3 text-gray-900"><%= @total_course_offering_count %></td>
+          <td class="px-4 py-3 text-gray-900"><%= @total_student_count %></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 
   <div class="flex flex-wrap gap-4 items-center justify-between">
     <div class="flex flex-wrap gap-3">

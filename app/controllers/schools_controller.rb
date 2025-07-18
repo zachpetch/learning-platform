@@ -3,27 +3,36 @@ class SchoolsController < ApplicationController
 
   # GET /schools/1 or /schools/1.json
   def show
-    # Get the current term for this school
-    @current_term = @school.terms.current.first
+    terms = @school.terms.includes(:subscriptions, course_offerings: :payments)
 
-    if @current_term
-      # Count students with subscriptions to the current term
-      @subscription_count = @current_term.subscriptions.joins(:user).distinct.count("users.id")
+    @past_terms = terms.past
+    @current_terms = terms.current
+    @upcoming_terms = terms.upcoming
 
-      # Count students with payments for course offerings in the current term
-      @course_payment_count = Payment.joins(:course_offering, :user)
-                                     .where(course_offerings: { term: @current_term })
-                                     .where.not(completed_at: nil)
-                                     .distinct
-                                     .count("users.id")
+    @total_subscriptions_count = count_subscriptions(@past_terms + @current_terms + @upcoming_terms)
+    @past_subscriptions_count = count_subscriptions(@past_terms)
+    @current_subscriptions_count = count_subscriptions(@current_terms)
+    @upcoming_subscriptions_count = count_subscriptions(@upcoming_terms)
 
-      # Get total unique students (combining subscriptions and course payments)
-      @total_student_count = calculate_total_students
-    else
-      @subscription_count = 0
-      @course_payment_count = 0
-      @total_student_count = 0
-    end
+    @total_paid_subscriptions_count = count_paid_subscriptions(@past_terms + @current_terms + @upcoming_terms)
+    @past_paid_subscriptions_count = count_paid_subscriptions(@past_terms)
+    @current_paid_subscriptions_count = count_paid_subscriptions(@current_terms)
+    @upcoming_paid_subscriptions_count = count_paid_subscriptions(@upcoming_terms)
+
+    @total_licensed_subscriptions_count = count_licensed_subscriptions(@past_terms + @current_terms + @upcoming_terms)
+    @past_licensed_subscriptions_count = count_licensed_subscriptions(@past_terms)
+    @current_licensed_subscriptions_count = count_licensed_subscriptions(@current_terms)
+    @upcoming_licensed_subscriptions_count = count_licensed_subscriptions(@upcoming_terms)
+
+    @total_course_offering_count = count_course_payment_users(@past_terms + @current_terms + @upcoming_terms)
+    @past_course_offering_count = count_course_payment_users(@past_terms)
+    @current_course_offering_count = count_course_payment_users(@current_terms)
+    @upcoming_course_offering_count = count_course_payment_users(@upcoming_terms)
+
+    @total_student_count = unique_student_count(@past_terms + @current_terms + @upcoming_terms)
+    @past_student_count = unique_student_count(@past_terms)
+    @current_student_count = unique_student_count(@current_terms)
+    @upcoming_student_count = unique_student_count(@upcoming_terms)
   end
 
   # GET /schools/new
@@ -85,16 +94,41 @@ class SchoolsController < ApplicationController
     params.expect(school: [ :name, :short_name ])
   end
 
-  def calculate_total_students
-    return 0 unless @current_term
+  def count_subscriptions(terms)
+    Subscription.where(term: terms).joins(:user).distinct.count("users.id")
+  end
 
-    subscription_user_ids = @current_term.subscriptions.select(:user_id)
-    payment_user_ids = Payment.joins(:course_offering)
-                              .where(course_offerings: { term: @current_term })
-                              .where.not(completed_at: nil)
-                              .select(:user_id)
+  def count_paid_subscriptions(terms)
+    Subscription
+      .where(term: terms)
+      .joins(:payments)
+      .distinct
+      .count("subscriptions.id")
+  end
 
-    union_query = User.from("(#{subscription_user_ids.to_sql} UNION #{payment_user_ids.to_sql}) AS combined_users")
-    union_query.count
+  def count_licensed_subscriptions(terms)
+    Subscription
+      .where(term: terms)
+      .where.not(license_id: nil)
+      .distinct
+      .count("subscriptions.id")
+  end
+
+  def count_course_payment_users(terms)
+    Payment.joins(:course_offering, :user)
+           .where(course_offerings: { term_id: terms.pluck(:id) })
+           .where.not(completed_at: nil)
+           .distinct
+           .count("users.id")
+  end
+
+  def unique_student_count(terms)
+    sub_ids = Subscription.where(term: terms).select(:user_id)
+    pay_ids = Payment.joins(:course_offering)
+                     .where(course_offerings: { term_id: terms.pluck(:id) })
+                     .where.not(completed_at: nil)
+                     .select(:user_id)
+
+    User.from("(#{sub_ids.to_sql} UNION #{pay_ids.to_sql}) AS combined_users").count
   end
 end
