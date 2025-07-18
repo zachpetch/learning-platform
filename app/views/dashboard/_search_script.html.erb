@@ -3,7 +3,7 @@
         let schoolSearchTimeout;
         let studentSearchTimeout;
 
-        // School search functionality
+        // School search
         const schoolSearch = document.getElementById('schoolSearch');
         const schoolSearchSpinner = document.getElementById('schoolSearchSpinner');
         const schoolsGrid = document.getElementById('schoolsGrid');
@@ -15,11 +15,11 @@
 
                 schoolSearchTimeout = setTimeout(() => {
                     performSearch('schools', query, schoolSearchSpinner, schoolsGrid);
-                }, 300); // 300ms delay
+                }, 300);
             });
         }
 
-        // Student search functionality
+        // Student search
         const studentSearch = document.getElementById('studentSearch');
         const studentSearchSpinner = document.getElementById('studentSearchSpinner');
         const studentsGrid = document.getElementById('studentsGrid');
@@ -31,27 +31,36 @@
 
                 studentSearchTimeout = setTimeout(() => {
                     performSearch('students', query, studentSearchSpinner, studentsGrid);
-                }, 300); // 300ms delay
+                }, 300);
             });
         }
 
-        function performSearch(type, query, spinner, gridContainer) {
-            // Show spinner
+        function performSearch(type, query, spinner, gridContainer, page = null) {
             spinner.classList.remove('hidden');
 
-            // Build URL with search parameters
-            const url = new URL(window.location.href);
+            const baseUrl = type === 'schools' ? '/dashboard/search_schools_ajax' : '/dashboard/search_students_ajax';
+            const url = new URL(baseUrl, window.location.origin);
+
             if (query) {
                 url.searchParams.set(type === 'schools' ? 'school_search' : 'student_search', query);
-            } else {
-                url.searchParams.delete(type === 'schools' ? 'school_search' : 'student_search');
             }
 
-            // Update browser URL without reload
-            window.history.replaceState({}, '', url);
+            if (page) {
+                url.searchParams.set(type === 'schools' ? 'schools_page' : 'students_page', page);
+            }
 
-            // Make AJAX request
-            fetch(url.pathname + url.search, {
+            const mainUrl = new URL(window.location.href);
+            if (query) {
+                mainUrl.searchParams.set(type === 'schools' ? 'school_search' : 'student_search', query);
+            } else {
+                mainUrl.searchParams.delete(type === 'schools' ? 'school_search' : 'student_search');
+            }
+            if (page) {
+                mainUrl.searchParams.set(type === 'schools' ? 'schools_page' : 'students_page', page);
+            }
+            window.history.replaceState({}, '', mainUrl);
+
+            fetch(url.href, {
                 method: 'GET',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
@@ -65,28 +74,52 @@
                     return response.text();
                 })
                 .then(html => {
-                    // Update the grid content
                     gridContainer.innerHTML = html;
-
-                    // Hide spinner
+                    attachPaginationHandlers();
                     spinner.classList.add('hidden');
                 })
                 .catch(error => {
                     console.error('Search error:', error);
-
-                    // Hide spinner
                     spinner.classList.add('hidden');
-
-                    // Show error message
                     gridContainer.innerHTML = `
-        <div class="text-center py-8">
-          <svg class="size-12 text-red-400 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/>
-          </svg>
-          <p class="text-red-500">Error loading search results. Please try again.</p>
-        </div>
-      `;
+    <div class="text-center py-8">
+      <svg class="size-12 text-red-400 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/>
+      </svg>
+      <p class="text-red-500">Error loading search results. Please try again.</p>
+    </div>
+  `;
                 });
         }
+
+        function attachPaginationHandlers() {
+            // School pagination
+            const schoolPaginationLinks = document.querySelectorAll('#schoolsGrid ~ .pagination a');
+            schoolPaginationLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const url = new URL(this.href);
+                    const page = url.searchParams.get('schools_page');
+                    const currentSearch = document.getElementById('schoolSearch').value.trim();
+
+                    performSearch('schools', currentSearch, schoolSearchSpinner, schoolsGrid, page);
+                });
+            });
+
+            // Student pagination
+            const studentPaginationLinks = document.querySelectorAll('#studentsGrid ~ .pagination a');
+            studentPaginationLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const url = new URL(this.href);
+                    const page = url.searchParams.get('students_page');
+                    const currentSearch = document.getElementById('studentSearch').value.trim();
+
+                    performSearch('students', currentSearch, studentSearchSpinner, studentsGrid, page);
+                });
+            });
+        }
+
+        attachPaginationHandlers();
     });
 </script>

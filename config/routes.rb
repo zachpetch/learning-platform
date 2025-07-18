@@ -1,7 +1,14 @@
 Rails.application.routes.draw do
-  resources :schools
-  resources :users
-  get "/", to: "dashboard#index"
+  resources :schools, only: [ :show ]
+  resources :users, only: [ :show ]
+  # get "/", to: "dashboard#index"
+
+  resources :dashboard, only: [ :index ] do
+    collection do
+      get :search_schools_ajax
+      get :search_students_ajax
+    end
+  end
 
   resource :session
   resources :passwords, param: :token

@@ -24,3 +24,8 @@
     </a>
   <% end %>
 </div>
+
+<!-- Schools Pagination -->
+<div class="mt-6">
+  <%= paginate @schools, param_name: :schools_page, params: { school_search: params[:school_search] } %>
+</div>

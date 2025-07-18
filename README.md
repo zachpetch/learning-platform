@@ -8,9 +8,9 @@ A demonstration of Ruby on Rails via a simple Learning Platform web app.
 
 `bin/rails db:migrate`
 
-#### Step 2: Load Fixtures (optional)
+#### Step 2: Seed the database (optional)
 
-`bin/rails db:fixtures:load`
+`bin/rails db:seed`
 
 #### Step 3: Launch Server
 
@@ -21,73 +21,6 @@ A demonstration of Ruby on Rails via a simple Learning Platform web app.
 - Visit http://localhost:3000/ in your browser.
 - Sign in with admin@example.com (password is "password")
 - OR create your own account
-
-## Database Overview
-
-- **User**
-    - id (Primary Key, Int)
-    - first_name (String)
-    - last_name (String)
-    - verified_at (DateTime, Nullable)
-    - created_at (DateTime)
-    - updated_at (DateTime)
-- **School**
-    - id (Primary Key, Int)
-    - name (String)
-    - created_at (DateTime)
-    - updated_at (DateTime)
-- **Term**
-    - id (Primary Key, Int)
-    - school_id (Foreign Key, Int)
-    - name (String)
-    - year (Int)
-    - sequence_num (Int)
-    - start_date (Date)
-    - end_date (Date)
-    - created_at (DateTime)
-    - updated_at (DateTime)
-- **Course**
-    - id (Primary Key, Int)
-    - school_id (Foreign Key, Int)
-    - subject (String)
-    - number (Int)
-    - name (String, Nullable)
-    - description (Text, Nullable)
-    - created_at (DateTime)
-    - updated_at (DateTime)
-- **CourseOffering**
-    - id (Primary Key, Int)
-    - course_id (Foreign Key, Int)
-    - term_id (Foreign Key, Int)
-    - created_at (DateTime)
-    - updated_at (DateTime)
-- **License**
-    - id (Primary Key, Int)
-    - code (String)
-    - term_count (Int)
-    - created_at (DateTime)
-    - updated_at (DateTime)
-- **Subscription**
-    - id (Primary Key, Int)
-    - user_id (Foreign Key, Int)
-    - term_id (Foreign Key, Int)
-    - license_id (Foreign Key, Int, Nullable)
-    - payment_id (Foreign Key, Int, Nullable)
-    - status (Int)
-    - created_at (DateTime)
-    - updated_at (DateTime)
-- **Payment**
-    - id (Primary Key, Int)
-    - user_id (Foreign Key, Int)
-    - subscription_id (Foreign Key, Int, Nullable)
-    - course_offering_id (Foreign Key, Int, Nullable)
-    - amount (Int)
-    - provider (String)
-    - provider_transaction_id (String)
-    - completed_at (DateTime, Nullable)
-    - refunded_at (DateTime, Nullable)
-    - created_at (DateTime)
-    - updated_at (DateTime)
 
 ## Notes
 
@@ -135,14 +68,17 @@ schools could set to be the number of available spots in the class, and it would
 number of users signed up for it reached the number of available spots. There would also be additional complexity to
 ensure the courses weren't overbooked, and it could be nice to add a waitlist feature in this case as well.
 
-### Soft Deletion
+#### Licenses and Subscriptions
 
-I like the idea of using soft-deletion for posterity. It seems like there are useful gems for handling this, like the
-`discard` gem. With that said, in the context of the assignment, I didn't want to spend too much time figuring that out
-this week, so the models are using destructive deletion that cascades to dependent models. In practice, however, it
-would be worth setting the database up to opt for soft-deletion (or deactivation) of records, or at least determining
-what data should be kept after deletion (for example, nullifying associations on deletion of dependent records rather
-than deleting the records entirely).
+My thoughts behind setting these up is that there would be some system for generating a license code for a set number of
+terms, whether it's the schools or some other entity that does the generating, and a person could redeem the code for a
+term at one school, which would grant them a subscription to that term at that school, giving them access to all the
+courses available at that time. Obviously the entire application isn't fleshed out such that this process is possible,
+and there would need to be checks in place to ensure a license code could not be redeemed for more subscriptions than
+were assigned to it, etc., but that is what I had in my mind for the implementation, and it is an element of the project
+that I felt may be unclear while looking through the schema or the rest of the code.
+Ultimately, this flow could probably be done better, or at least be considered more carefully, to ensure it's the best
+way forward. But I've opted to not spend more time on it for now.
 
 ### Database Seeding
 
@@ -162,21 +98,35 @@ uniqueness.
 I used TailwindCSS, as it's a UI framework I'm familiar with. And though I see there is a gem for importing it, I've
 just used the standard TailwindCSS CDN for the time being.
 
+Note: I wrote this next part before starting to figure out the way partials work, and I've since started implementing
+a couple of view elements with them, but didn't have the time to re-do it all to be more cleanly put together.
 In that context, as well, I would like to learn a bit more about templating and components (whether this is done with
 React, or if there are standard Rails best practices in this regard) as, ideally, there wouldn't be a lot of repeated
 utility classes in each of the similarly styled components (like search fields or cards), but the style would be defined
 on a single component that would be then re-used wherever needed. This is another thing I would tackle given a bit more
 time, but seemed less important to do here, where the primary goal of developing the domain logic.
 
-There are a couple places I used icons from TailwindCSS's Heroicons library. For the sake of simplicity, I've just
-copied and pasted the SVG code from heroicons.com, but in practice I would probably pull in the library (or a similar
-one) through a gem, or something along those lines.
+There are a couple places I used icons from TailwindCSS's Heroicons library. For the sake of quickness, I just copied
+and pasted the SVG code from heroicons.com, but in practice I would probably pull in the library (or a similar one)
+through a gem, or something along those lines.
 
-### Licenses and Subscriptions
+#### Pagination and Searching/Filtering
 
-There is probably a better way to handle these, and obviously the entire application isn't fleshed out such that a user
-can go in and redeem a license for a subscription, but my thought here is that, in production, a license would be
-generated with a code and the number of terms it would cover. In that way, a user could buy or be granted a license to
-one or more terms. And when they redeem the license for a term, it would create a subscription for that term that is
-associated with that license. There would need to be checks in place to ensure a license cannot be used for more
-subscriptions than the number of terms it has been generated with.
+I wanted to do as much of this project using built-in Rails functionality, or other gems considered "best practice", but
+though there are some frameworks that enable searching/filtering and pagination without refreshing the whole page, I was
+not able to figure out how to do that with Rails before I was feeling pressed for time. So, I've implemented this
+functionality using AJAX to make the requests, and set up the controller to recognize AJAX requests differently than
+standard GET requests, returning only the parts of the page that need to be updated, rather than refreshing the entire
+page.
+
+With that said, I'd be very interested to know if there is a built-in method in Rails, or what the standard practice is
+for doing this.
+
+### Soft Deletion
+
+I like the idea of using soft-deletion for posterity. It seems like there are useful gems for handling this, like the
+`discard` gem. With that said, in the context of the assignment, I didn't want to spend too much time figuring that out
+this week, so the models are using destructive deletion that cascades to dependent models. In practice, however, it
+would be worth setting the database up to opt for soft-deletion (or deactivation) of records, or at least determining
+what data should be kept after deletion (for example, nullifying associations on deletion of dependent records rather
+than deleting the records entirely).

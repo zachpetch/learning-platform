@@ -71,3 +71,8 @@
     </a>
   <% end %>
 </div>
+
+<!-- Students Pagination -->
+<div class="mt-6">
+  <%= paginate @students, param_name: :students_page, params: { student_search: params[:student_search] } %>
+</div>

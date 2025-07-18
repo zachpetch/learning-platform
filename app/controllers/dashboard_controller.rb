@@ -1,10 +1,17 @@
 class DashboardController < ApplicationController
   def index
-    # @schools = School.order(:name).page(params[:schools_page]).per(8)
-    # @students = User.order(:last_name).page(params[:students_page]).per(6)
-
     @schools = search_schools(params[:school_search]).page(params[:schools_page]).per(8)
     @students = search_students(params[:student_search]).page(params[:students_page]).per(6)
+  end
+
+  def search_schools_ajax
+    @schools = search_schools(params[:school_search]).page(params[:schools_page]).per(8)
+    render partial: "schools_grid", locals: { schools: @schools }
+  end
+
+  def search_students_ajax
+    @students = search_students(params[:student_search]).page(params[:students_page]).per(6)
+    render partial: "students_grid", locals: { students: @students }
   end
 
   private
