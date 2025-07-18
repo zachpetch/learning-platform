@@ -99,37 +99,36 @@
         }
 
         function paginationClickHandler(e) {
-            // Check if clicked element is a pagination link within the grids
+            // Check if clicked element is a pagination link
             const target = e.target.closest('a');
             if (!target) return;
 
-            const schoolsSection = document.getElementById('schoolsGrid');
-            const studentsSection = document.getElementById('studentsGrid');
+            // Check if this link is within a pagination container with data attribute
+            const paginationContainer = target.closest('[data-pagination-type]');
+            if (!paginationContainer) return;
 
-            // Check if this is a schools pagination link
-            if (schoolsSection && schoolsSection.parentElement.contains(target)) {
+            const paginationType = paginationContainer.dataset.paginationType;
+
+            if (paginationType === 'schools') {
+                e.preventDefault();
+
                 const url = new URL(target.href);
-                const schoolsPage = url.searchParams.get('schools_page');
+                const schoolsPage = url.searchParams.get('schools_page') || '1';
 
-                if (schoolsPage) {
-                    e.preventDefault();
-                    const currentSearch = document.getElementById('schoolSearch')?.value.trim() || '';
-                    performSearch('schools', currentSearch, schoolSearchSpinner, schoolsGrid, schoolsPage);
-                    return;
-                }
+                const currentSearch = document.getElementById('schoolSearch')?.value.trim() || '';
+                performSearch('schools', currentSearch, schoolSearchSpinner, schoolsGrid, schoolsPage);
+                return;
             }
 
-            // Check if this is a students pagination link
-            if (studentsSection && studentsSection.parentElement.contains(target)) {
-                const url = new URL(target.href);
-                const studentsPage = url.searchParams.get('students_page');
+            if (paginationType === 'students') {
+                e.preventDefault();
 
-                if (studentsPage) {
-                    e.preventDefault();
-                    const currentSearch = document.getElementById('studentSearch')?.value.trim() || '';
-                    performSearch('students', currentSearch, studentSearchSpinner, studentsGrid, studentsPage);
-                    return;
-                }
+                const url = new URL(target.href);
+                const studentsPage = url.searchParams.get('students_page') || '1';
+
+                const currentSearch = document.getElementById('studentSearch')?.value.trim() || '';
+                performSearch('students', currentSearch, studentSearchSpinner, studentsGrid, studentsPage);
+                return;
             }
         }
 

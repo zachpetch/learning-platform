@@ -31,6 +31,6 @@
   <% end %>
 </div>
 
-<div class="mt-6">
+<div class="mt-6" data-pagination-type="schools">
   <%= paginate @schools, param_name: :schools_page, params: { school_search: params[:school_search] } %>
 </div>
