@@ -1,5 +1,5 @@
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    function initializeSearch() {
         let schoolSearchTimeout;
         let studentSearchTimeout;
 
@@ -9,14 +9,20 @@
         const schoolsGrid = document.getElementById('schoolsGrid');
 
         if (schoolSearch) {
-            schoolSearch.addEventListener('input', function () {
+            if (schoolSearch.searchHandler) {
+                schoolSearch.removeEventListener('input', schoolSearch.searchHandler);
+            }
+
+            schoolSearch.searchHandler = function () {
                 clearTimeout(schoolSearchTimeout);
                 const query = this.value.trim();
 
                 schoolSearchTimeout = setTimeout(() => {
                     performSearch('schools', query, schoolSearchSpinner, schoolsGrid);
                 }, 300);
-            });
+            };
+
+            schoolSearch.addEventListener('input', schoolSearch.searchHandler);
         }
 
         // Student search
@@ -25,14 +31,20 @@
         const studentsGrid = document.getElementById('studentsGrid');
 
         if (studentSearch) {
-            studentSearch.addEventListener('input', function () {
+            if (studentSearch.searchHandler) {
+                studentSearch.removeEventListener('input', studentSearch.searchHandler);
+            }
+
+            studentSearch.searchHandler = function () {
                 clearTimeout(studentSearchTimeout);
                 const query = this.value.trim();
 
                 studentSearchTimeout = setTimeout(() => {
                     performSearch('students', query, studentSearchSpinner, studentsGrid);
                 }, 300);
-            });
+            };
+
+            studentSearch.addEventListener('input', studentSearch.searchHandler);
         }
 
         function performSearch(type, query, spinner, gridContainer, page = null) {
@@ -121,5 +133,27 @@
         }
 
         attachPaginationHandlers();
-    });
+    }
+
+    function setupInitialization() {
+        document.addEventListener('DOMContentLoaded', initializeSearch);
+        window.addEventListener('pageshow', initializeSearch);
+        window.addEventListener('focus', function () {
+            setTimeout(function () {
+                const schoolSearch = document.getElementById('schoolSearch');
+                const studentSearch = document.getElementById('studentSearch');
+
+                if ((schoolSearch && !schoolSearch.searchHandler) || (studentSearch && !studentSearch.searchHandler)) {
+                    initializeSearch();
+                }
+            }, 100);
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        setupInitialization();
+    } else {
+        initializeSearch();
+        setupInitialization();
+    }
 </script>
