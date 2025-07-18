@@ -1,3 +1,9 @@
+<div class="mb-4 flex justify-between items-center">
+  <span class="text-sm text-gray-600">
+    <%= page_entries_info @students, entry_name: 'student' %>
+  </span>
+</div>
+
 <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
   <% @students.each do |student| %>
     <a href="/users/<%= student.id %>" class="block">
@@ -72,7 +78,6 @@
   <% end %>
 </div>
 
-<!-- Students Pagination -->
 <div class="mt-6">
   <%= paginate @students, param_name: :students_page, params: { student_search: params[:student_search] } %>
 </div>
