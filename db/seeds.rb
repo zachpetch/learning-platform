@@ -127,6 +127,7 @@ User.find_each do |user|
       amount: rand(MIN_COURSE_COST..MAX_COURSE_COST),
       provider: "Credit Card",
       provider_transaction_id: SecureRandom.uuid,
+      completed_at: Time.now,
       created_at: Time.now,
       updated_at: Time.now
     }
@@ -179,6 +180,7 @@ subscriptions.each do |subscription|
     amount: rand(MIN_SUBSCRIPTION_COST..MAX_SUBSCRIPTION_COST),
     provider: "Credit Card",
     provider_transaction_id: SecureRandom.uuid,
+    completed_at: Time.now,
     created_at: Time.now,
     updated_at: Time.now
   }
