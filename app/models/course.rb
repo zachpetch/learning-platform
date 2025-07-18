@@ -9,12 +9,18 @@ class Course < ApplicationRecord
   validates :number, uniqueness: { scope: [ :school_id, :subject ] }
 
   scope :search, ->(query) {
-    base = includes(:school).order(:subject, :number)
+    base = joins(:school)
+             .left_joins(course_offerings: :payments)
+             .select("courses.*, COUNT(payments.id) AS payments_count")
+             .group("courses.id", "schools.id")
+             .order(:subject, :number)
+
     return base if query.blank?
 
     q = "%#{query.downcase}%"
-    base.joins(:school).where(
-      "LOWER(courses.subject) LIKE :q OR CAST(courses.number AS TEXT) LIKE :q OR LOWER(courses.name) LIKE :q OR LOWER(courses.subject || ' ' || CAST(courses.number AS TEXT)) LIKE :q OR LOWER(schools.name) LIKE :q OR LOWER(schools.short_name) LIKE :q", q: q
+    base.where(
+      "LOWER(courses.subject) LIKE :q OR CAST(courses.number AS TEXT) LIKE :q OR LOWER(courses.name) LIKE :q OR LOWER(courses.subject || ' ' || CAST(courses.number AS TEXT)) LIKE :q OR LOWER(schools.name) LIKE :q OR LOWER(schools.short_name) LIKE :q",
+      q: q
     )
   }
 
