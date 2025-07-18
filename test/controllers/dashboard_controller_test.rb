@@ -81,8 +81,20 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
     assert_template partial: "_schools_grid"
   end
 
+  test "should handle ajax term search" do
+    get search_terms_ajax_dashboard_index_url, params: { term_search: "Fall 2026" }, xhr: true
+    assert_response :success
+    assert_template partial: "_terms_grid"
+  end
+
+  test "should handle ajax course search" do
+    get search_courses_ajax_dashboard_index_url, params: { course_search: "Mathematics" }, xhr: true
+    assert_response :success
+    assert_template partial: "_courses_grid"
+  end
+
   test "should handle ajax student search" do
-    get search_students_ajax_dashboard_index_url, params: { student_search: "One" }, xhr: true
+    get search_students_ajax_dashboard_index_url, params: { student_search: "Steve" }, xhr: true
     assert_response :success
     assert_template partial: "_students_grid"
   end
