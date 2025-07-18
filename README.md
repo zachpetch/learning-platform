@@ -120,7 +120,8 @@ standard GET requests, returning only the parts of the page that need to be upda
 page.
 
 With that said, I'd be very interested to know if there is a built-in method in Rails, or what the standard practice is
-for doing this.
+for doing this. I just started to come across some info about using "remote: true" to essentially send an async request.
+But not in time to make changes to how I put this together.
 
 ### Soft Deletion
 
