@@ -135,4 +135,18 @@ than deleting the records entirely).
 
 ### Tests
 
-It feels like there could always be more tests to add.
+It feels like there could always be more tests to add, and I am sure there are some good ones that I've forgotten to
+include.
+
+There are some automatically generated tests in the test/system directory which I've commented out as I have
+intentionally removed the functionality they are testing for, like buttons/links to new/edit/destroy pages for the sake
+of simplicity at the moment. But I opted not to delete them entirely as I suspect it could be useful if I spent some
+more time to flesh this out further.
+
+## Final Thoughts
+
+There is quite a bit of scaffolded content that Rails generates when using commands like
+`bin/rails generate scaffold ModelName ...`. Again, with a bit more time I might clean the unnecessary stuff up, or
+ideally flesh out the whole system a bit more. With that said, it became increasingly clear that I'd need to focus my
+time on accomplishing the task set out in the description you showed me. And since these extra parts were not hindering
+anything, I've left them there, in their basic form, for the time being.
