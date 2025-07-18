@@ -1,1 +1,18 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  course_offering: one
+  amount: 25000
+  provider: Credit Card
+  provider_transaction_id: ABC-123-QX2025
+  completed_at: 2025-07-14 23:36:55
+
+two:
+  user: two
+  subscription: two
+  amount: 35000
+  provider: Credit Card
+  provider_transaction_id: DEF-456-QX2026
+  completed_at: 2025-07-14 23:36:55
+  refunded_at: 2025-08-14 23:36:55

@@ -1,1 +1,13 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  school: one
+  subject: Mathematics
+  number: 101
+  name: Calculus I
+
+two:
+  school: two
+  subject: Computer Science
+  number: 221
+  name: Databases II
