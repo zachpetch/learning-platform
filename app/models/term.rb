@@ -19,6 +19,16 @@ class Term < ApplicationRecord
   scope :upcoming, -> { where("start_date > ?", Date.current) }
   scope :past, -> { where("end_date < ?", Date.current) }
 
+  scope :search, ->(query) {
+    base = includes(:school).order(:id)
+    return base if query.blank?
+
+    q = "%#{query.downcase}%"
+    base.joins(:school).where(
+      "LOWER(terms.name) LIKE :q OR LOWER(schools.name) LIKE :q OR LOWER(schools.short_name) LIKE :q", q: q
+    )
+  }
+
   def current?
     Date.current.between?(start_date, end_date)
   end

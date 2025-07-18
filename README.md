@@ -20,7 +20,6 @@ A demonstration of Ruby on Rails via a simple Learning Platform web app.
 
 - Visit http://localhost:3000/ in your browser.
 - Sign in with admin@example.com (password is "password")
-- OR create your own account
 
 ## Notes
 
@@ -49,7 +48,7 @@ implement anything resembling connecting to payment provider APIs, which would, 
 
 The `completed_at` field is meant to be null if the payment has not gone through, and to contain a DateTime value when
 it's successfully completed. Similarly, the `refunded_at` field is meant to be null unless the payment was later
-refuneded, at which point the `refunded_at` field would contain the DateTime that the refund was completed.
+refunded, at which point the `refunded_at` field would contain the DateTime that the refund was completed.
 
 I've intentionally ignored the possibility for partial refunds, which may require a separate refunds model/table. It
 felt like unnecessary complexity for the purposes of this assignment.
@@ -126,6 +125,9 @@ for doing this. I just started to come across some info about using "remote: tru
 seems like this is the path to pursue in order to learn more, but not in time to make changes to how I put this
 together.
 
+There's clearly more that can be done regarding searching so that, for example, users could search for "ubc math" and
+get all mathematics courses offered at UBC, alongside additional filtering options.
+
 ### Soft Deletion
 
 I like the idea of using soft-deletion for posterity. It seems like there are useful gems for handling this, like the
@@ -148,7 +150,10 @@ more time to flesh this out further.
 ## Final Thoughts
 
 There is quite a bit of scaffolded content that Rails generates when using commands like
-`bin/rails generate scaffold ModelName ...`. Again, with a bit more time I might clean the unnecessary stuff up, or
-ideally flesh out the whole system a bit more. With that said, it became increasingly clear that I'd need to focus my
+`bin/rails generate scaffold ModelName ...`. Again, with a bit more time I might clean the unnecessary stuff up or,
+ideally, flesh out the whole system a bit more. With that said, it became increasingly clear that I'd need to focus my
 time on accomplishing the task set out in the description you showed me. And since these extra parts were not hindering
 anything, I've left them there, in their basic form, for the time being.
+
+Ultimately, there are a number of things I'd want to do if this was an ongoing project, but I had to draw the line to
+get this over to you.
