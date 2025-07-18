@@ -105,31 +105,43 @@
         }
 
         function attachPaginationHandlers() {
-            // School pagination
-            const schoolPaginationLinks = document.querySelectorAll('#schoolsGrid ~ .pagination a');
-            schoolPaginationLinks.forEach(link => {
-                link.addEventListener('click', function (e) {
+            document.removeEventListener('click', paginationClickHandler);
+            document.addEventListener('click', paginationClickHandler);
+        }
+
+        function paginationClickHandler(e) {
+            // Check if clicked element is a pagination link within the grids
+            const target = e.target.closest('a');
+            if (!target) return;
+
+            const schoolsSection = document.getElementById('schoolsGrid');
+            const studentsSection = document.getElementById('studentsGrid');
+
+            // Check if this is a schools pagination link
+            if (schoolsSection && schoolsSection.parentElement.contains(target)) {
+                const url = new URL(target.href);
+                const schoolsPage = url.searchParams.get('schools_page');
+
+                if (schoolsPage) {
                     e.preventDefault();
-                    const url = new URL(this.href);
-                    const page = url.searchParams.get('schools_page');
-                    const currentSearch = document.getElementById('schoolSearch').value.trim();
+                    const currentSearch = document.getElementById('schoolSearch')?.value.trim() || '';
+                    performSearch('schools', currentSearch, schoolSearchSpinner, schoolsGrid, schoolsPage);
+                    return;
+                }
+            }
 
-                    performSearch('schools', currentSearch, schoolSearchSpinner, schoolsGrid, page);
-                });
-            });
+            // Check if this is a students pagination link
+            if (studentsSection && studentsSection.parentElement.contains(target)) {
+                const url = new URL(target.href);
+                const studentsPage = url.searchParams.get('students_page');
 
-            // Student pagination
-            const studentPaginationLinks = document.querySelectorAll('#studentsGrid ~ .pagination a');
-            studentPaginationLinks.forEach(link => {
-                link.addEventListener('click', function (e) {
+                if (studentsPage) {
                     e.preventDefault();
-                    const url = new URL(this.href);
-                    const page = url.searchParams.get('students_page');
-                    const currentSearch = document.getElementById('studentSearch').value.trim();
-
-                    performSearch('students', currentSearch, studentSearchSpinner, studentsGrid, page);
-                });
-            });
+                    const currentSearch = document.getElementById('studentSearch')?.value.trim() || '';
+                    performSearch('students', currentSearch, studentSearchSpinner, studentsGrid, studentsPage);
+                    return;
+                }
+            }
         }
 
         attachPaginationHandlers();
