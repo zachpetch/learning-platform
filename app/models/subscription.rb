@@ -2,6 +2,7 @@ class Subscription < ApplicationRecord
   belongs_to :user
   belongs_to :term
   belongs_to :license, optional: true
+  has_many :payments
 
   enum :status, [ :active, :expired, :cancelled ], default: :active
 
@@ -11,10 +12,6 @@ class Subscription < ApplicationRecord
 
   scope :current, -> { joins(:term).merge(Term.current) }
   scope :upcoming, -> { joins(:term).merge(Term.upcoming) }
-
-  def paid?
-    payment.present? && payment.completed?
-  end
 
   def licensed?
     license.present?

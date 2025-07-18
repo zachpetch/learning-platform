@@ -16,7 +16,9 @@
         <div class="flex-1 min-w-0">
           <h3 class="text-lg font-semibold text-gray-900 truncate"><%= term.name %></h3>
           <p class="text-sm text-gray-600 mt-1"><%= term.school.name %></p>
-          <p class="text-md text-gray-700 mt-1"><%= term.subscriptions.count %> Students Enrolled</p>
+          <p class="text-md text-cyan-700 mt-1"><%= term.total_subscriptions_count %> Students Enrolled</p>
+          <p class="text-sm text-teal-700 mt-1">- <%= term.paid_subscriptions_count %> via Credit Card</p>
+          <p class="text-sm text-green-700 mt-1">- <%= term.licensed_subscriptions_count %> via License</p>
         </div>
       </div>
     </div>

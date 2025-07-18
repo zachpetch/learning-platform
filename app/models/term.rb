@@ -20,12 +20,25 @@ class Term < ApplicationRecord
   scope :past, -> { where("end_date < ?", Date.current) }
 
   scope :search, ->(query) {
-    base = includes(:school).order(:id)
+    base = joins(:school)
+             .left_joins(:subscriptions)
+             .left_joins(subscriptions: :license)
+             .left_joins(subscriptions: :payments)
+             .select(
+               "terms.*",
+               "COUNT(DISTINCT subscriptions.user_id) AS total_subscriptions_count",
+               "COUNT(DISTINCT CASE WHEN payments.completed_at IS NOT NULL THEN payments.user_id END) AS paid_subscriptions_count",
+               "COUNT(DISTINCT CASE WHEN subscriptions.license_id IS NOT NULL THEN subscriptions.user_id END) AS licensed_subscriptions_count"
+             )
+             .group("terms.id", "schools.id")
+             .order(:id)
+
     return base if query.blank?
 
     q = "%#{query.downcase}%"
-    base.joins(:school).where(
-      "LOWER(terms.name) LIKE :q OR LOWER(schools.name) LIKE :q OR LOWER(schools.short_name) LIKE :q", q: q
+    base.where(
+      "LOWER(terms.name) LIKE :q OR LOWER(schools.name) LIKE :q OR LOWER(schools.short_name) LIKE :q",
+      q: q
     )
   }
 
@@ -39,6 +52,18 @@ class Term < ApplicationRecord
 
   def past?
     end_date < Date.current
+  end
+
+  def total_subscriptions_count
+    self[:total_subscriptions_count] || subscriptions.count
+  end
+
+  def paid_subscriptions_count
+    self[:paid_subscriptions_count] || subscriptions.joins(:payment).distinct.count(:user_id)
+  end
+
+  def licensed_subscriptions_count
+    self[:licensed_subscriptions_count] || subscriptions.joins(:license).distinct.count(:user_id)
   end
 
   private
