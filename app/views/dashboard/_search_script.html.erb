@@ -61,17 +61,6 @@
                 url.searchParams.set(type === 'schools' ? 'schools_page' : 'students_page', page);
             }
 
-            const mainUrl = new URL(window.location.href);
-            if (query) {
-                mainUrl.searchParams.set(type === 'schools' ? 'school_search' : 'student_search', query);
-            } else {
-                mainUrl.searchParams.delete(type === 'schools' ? 'school_search' : 'student_search');
-            }
-            if (page) {
-                mainUrl.searchParams.set(type === 'schools' ? 'schools_page' : 'students_page', page);
-            }
-            window.history.replaceState({}, '', mainUrl);
-
             fetch(url.href, {
                 method: 'GET',
                 headers: {
