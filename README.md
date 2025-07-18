@@ -96,7 +96,8 @@ uniqueness.
 ### HTML/Views
 
 I used TailwindCSS, as it's a UI framework I'm familiar with. And though I see there is a gem for importing it, I've
-just used the standard TailwindCSS CDN for the time being.
+just used the standard TailwindCSS CDN for the time being. In either case, there are a lot of design improvements that
+could be made to make this look more polished.
 
 Note: I wrote this next part before starting to figure out the way partials work, and I've since started implementing
 a couple of view elements with them, but didn't have the time to re-do it all to be more cleanly put together.

@@ -34,8 +34,8 @@ class DashboardController < ApplicationController
 
     if query.present?
       students = students.where(
-        "LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ? OR LOWER(first_name || ' ' || last_name) LIKE ?",
-        "%#{query.downcase}%", "%#{query.downcase}%", "%#{query.downcase}%"
+        "LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ? OR LOWER(first_name || ' ' || last_name) LIKE ? OR LOWER(email_address) LIKE ?",
+        "%#{query.downcase}%", "%#{query.downcase}%", "%#{query.downcase}%", "%#{query.downcase}%"
       )
     end
 
